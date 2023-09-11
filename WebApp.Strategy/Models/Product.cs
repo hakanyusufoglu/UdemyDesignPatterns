@@ -1,0 +1,28 @@
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebApp.Strategy.Models
+{
+    //Product classı mongoDb ve mssqlde tabloya karşılık gelmektedir
+    public class Product
+    {
+        //MongoDb default Id string olarak tanımlanır
+        [BsonId] //MongoDb primary key için
+        //Otomatik objectId tipine dönüşecek
+        [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
+        [Key] //EntityFramework için
+        public string Id { get; set; }
+        public string Name { get; set; }
+
+        //FluentValidation kullanılabilir
+        [BsonRepresentation(MongoDB.Bson.BsonType.Decimal128)]
+        [Column(TypeName ="decimel(18,2)")]
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+        public string UserId { get; set; }
+
+        [BsonRepresentation(MongoDB.Bson.BsonType.DateTime)]
+        public DateTime CreatedDate { get; set; }
+    }
+}
