@@ -1,6 +1,7 @@
 using BaseProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Strategy.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 }).AddEntityFrameworkStores<AppIdentityDbContext>();
 
-
+//Strategy design pattern sayesinde ProductRepositoryFromSqlServer kýsmý dinamik hale gelecektir.
+//builder.Services.AddScoped<IProductRepository,ProductRepositoryFromSqlServer>();
 
 var app = builder.Build();
 
