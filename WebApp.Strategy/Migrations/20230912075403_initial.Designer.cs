@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BaseProject.Migrations
+namespace WebApp.Strategy.Migrations
 {
     [DbContext(typeof(AppIdentityDbContext))]
-    [Migration("20230911112820_AddProductEntity")]
-    partial class AddProductEntity
+    [Migration("20230912075403_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -236,7 +236,7 @@ namespace BaseProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimel(18,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");

@@ -17,7 +17,7 @@ namespace WebApp.Strategy.Models
 
         //FluentValidation kullanılabilir
         [BsonRepresentation(MongoDB.Bson.BsonType.Decimal128)]
-        [Column(TypeName ="decimel(18,2)")]
+        [Column(TypeName ="decimal(18,2)")]
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string UserId { get; set; }
