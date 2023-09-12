@@ -4,7 +4,7 @@ using WebApp.Strategy.Models;
 
 namespace WebApp.Strategy.Repositories
 {
-    //
+    //1. strateji
     public class ProductRepositoryFromSqlServer : IProductRepository
     {
         private readonly AppIdentityDbContext _context;
