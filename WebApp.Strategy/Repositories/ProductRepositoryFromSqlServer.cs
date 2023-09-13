@@ -30,6 +30,9 @@ namespace WebApp.Strategy.Repositories
 
         public async Task<Product> SaveAsync(Product product)
         {
+            //Mongo Db bu işlemi otomatik yapar
+            product.Id = Guid.NewGuid().ToString();
+
             await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
             return product;
