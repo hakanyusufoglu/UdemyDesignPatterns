@@ -12,7 +12,7 @@ namespace WebApp.Strategy.Models
         //Otomatik objectId tipine dönüşecek
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         [Key] //EntityFramework için
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public string Name { get; set; }
 
         //FluentValidation kullanılabilir
@@ -20,7 +20,7 @@ namespace WebApp.Strategy.Models
         [Column(TypeName ="decimal(18,2)")]
         public decimal Price { get; set; }
         public int Stock { get; set; }
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [BsonRepresentation(MongoDB.Bson.BsonType.DateTime)]
         public DateTime CreatedDate { get; set; }

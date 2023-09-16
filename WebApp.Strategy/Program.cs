@@ -1,6 +1,7 @@
 using BaseProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Strategy.Models;
 using WebApp.Strategy.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,28 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 //Strategy design pattern sayesinde ProductRepositoryFromSqlServer kýsmý dinamik hale gelecektir.
 //builder.Services.AddScoped<IProductRepository,ProductRepositoryFromSqlServer>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IProductRepository>(sp =>
+{
+    var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+
+    //claim var mý yok mu?
+    var claim = httpContextAccessor.HttpContext.User.Claims.Where(x => x.Type == Settings.claimDatabaseType).FirstOrDefault();
+
+    var context = sp.GetRequiredService<AppIdentityDbContext>();
+    if (claim == null) return new ProductRepositoryFromSqlServer(context);
+
+    //claim tipine göre dön
+    var databaseType = (DatabaseTypeEnum)int.Parse(claim.Value);
+
+    //Her scope da bu iþlemler gerçekleþtirilecektir.
+    return databaseType switch
+    {
+        DatabaseTypeEnum.SqlServer => new ProductRepositoryFromSqlServer(context),
+        DatabaseTypeEnum.MongoDb => new ProductRepositoryFromMongoDb(builder.Configuration),
+        _ => throw new NotImplementedException()
+    };
+});
 
 var app = builder.Build();
 
