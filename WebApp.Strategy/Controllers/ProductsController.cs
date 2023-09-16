@@ -4,9 +4,11 @@ using BaseProject.Models;
 using WebApp.Strategy.Models;
 using WebApp.Strategy.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Strategy.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
