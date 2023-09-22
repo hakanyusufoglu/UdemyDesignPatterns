@@ -1,5 +1,4 @@
-﻿using BaseProject.Models;
-using System.Runtime.Intrinsics.Arm;
+﻿using WebApp.Template.Models;
 using System.Text;
 
 namespace WebApp.Template.UserCards
@@ -22,7 +21,7 @@ namespace WebApp.Template.UserCards
             sb.Append("<div class='card'>"); //birinci kart.
             //Algoritmanın 1. sırası
             sb.Append(SetPicture());
-            sb.Append($@"<div class='card-body'<h5>{AppUser.UserName}</h5><p>{AppUser.Description}</p>");
+            sb.Append($@"<div class='card-body'><h5>{AppUser.UserName}</h5><p>{AppUser.Description}</p>");
             sb.Append(SetFooter());
             sb.Append("</div>");
 
