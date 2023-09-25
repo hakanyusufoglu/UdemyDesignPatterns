@@ -1,7 +1,8 @@
 ﻿using DinkToPdf;
 using DinkToPdf.Contracts;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
+
 namespace WebApp.Command.Commands
 {
     public class PdfFile<T>
@@ -9,12 +10,12 @@ namespace WebApp.Command.Commands
         public readonly List<T> _list;
 
         //DI içerisindeki servisleri alabilirim
-        public readonly HttpContextAccessor _context;
+        public readonly HttpContext _context;
 
         public string FileName => $"{typeof(T).Name}.pdf";
         public string FileType => "application/octet-stream";
 
-        public PdfFile(List<T> list, HttpContextAccessor context)
+        public PdfFile(List<T> list, HttpContext context)
         {
             _list = list;
             _context = context;
@@ -23,7 +24,7 @@ namespace WebApp.Command.Commands
         public MemoryStream Create()
         {
             var type = typeof(T);
-
+            
             var sb = new StringBuilder();
 
             //html oluşturuyoruz.
@@ -71,7 +72,7 @@ namespace WebApp.Command.Commands
     }
             };
 
-            var converter = _context.HttpContext.RequestServices.GetRequiredService<IConverter>();
+            var converter = _context.RequestServices.GetRequiredService<IConverter>();
 
             return new(converter.Convert(doc));
         }
