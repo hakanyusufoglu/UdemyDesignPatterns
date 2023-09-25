@@ -2,6 +2,7 @@
 
 namespace WebApp.Command.Commands
 {
+    //Diagramda ICommand'ın Concreat'ine karşılık gelmektedir.
     public class CreatePdfTableActionCommand<T> : ITableActionCommand
     {
         private readonly PdfFile<T> _pdfFile;

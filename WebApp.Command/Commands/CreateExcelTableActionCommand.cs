@@ -5,6 +5,7 @@ namespace WebApp.Command.Commands
     //Diagramda ICommand'ın Concreat'ine karşılık gelmektedir.
     public class CreateExcelTableActionCommand<T> : ITableActionCommand
     {
+        //ExcelFile'ı bir interface yaparak implement edebilirdim ki yumuşak bağlılık sağlansın.
         private readonly ExcelFile<T> _excelFile;
 
         public CreateExcelTableActionCommand(ExcelFile<T> excelFile)

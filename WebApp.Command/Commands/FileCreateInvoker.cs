@@ -19,6 +19,7 @@ namespace WebApp.Command.Commands
 
         public IActionResult CreateFile()
         {
+            //loglama buraya yapılabilir.
             return _tableActionCommand.Execute();
         }
 
