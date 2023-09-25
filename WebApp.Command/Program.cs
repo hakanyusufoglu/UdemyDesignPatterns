@@ -40,7 +40,14 @@ using (var scope = app.Services.CreateScope())
         userManager.CreateAsync(new AppUser { UserName = "user2", Email = "user2@outlook.com" }, "Password12*").Wait(); 
         userManager.CreateAsync(new AppUser { UserName = "user3", Email = "user3@outlook.com" }, "Password12*").Wait(); 
         userManager.CreateAsync(new AppUser { UserName = "user4", Email = "user4@outlook.com" }, "Password12*").Wait(); 
-        userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait(); 
+        userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait();
+
+        Enumerable.Range(1, 30).ToList().ForEach(x =>
+        {
+            identityDbContext.Products.Add(new WebApp.Command.Models.Product() { Name = $"kalem {x}", Price = x * 100, Stock = x + 50 });
+        });
+        identityDbContext.SaveChanges();
+
     }
 }
 // Configure the HTTP request pipeline.
