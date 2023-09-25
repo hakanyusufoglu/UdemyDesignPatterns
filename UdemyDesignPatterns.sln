@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Strategy", "WebApp.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Template", "WebApp.Template\WebApp.Template.csproj", "{FB282716-7757-470C-9260-41A93E779E62}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Command", "WebApp.Command\WebApp.Command.csproj", "{6493575A-222A-4E41-8077-D41F9B39D99A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FB282716-7757-470C-9260-41A93E779E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB282716-7757-470C-9260-41A93E779E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB282716-7757-470C-9260-41A93E779E62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6493575A-222A-4E41-8077-D41F9B39D99A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6493575A-222A-4E41-8077-D41F9B39D99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6493575A-222A-4E41-8077-D41F9B39D99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6493575A-222A-4E41-8077-D41F9B39D99A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
