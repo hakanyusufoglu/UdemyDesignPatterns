@@ -2,6 +2,7 @@
 
 namespace WebApp.Observer.Observer
 {
+    //Kullanıcı üye olduğunda indirim gerçekleştirecek sınıf senaryosu
     public class UserObserverCreateDiscount : IUserObserver
     {
         private readonly IServiceProvider _serviceProvider;
