@@ -16,7 +16,10 @@ namespace WebApp.Observer.Observer
         {
             var logger = _serviceProvider.GetRequiredService<ILogger<UserObserverCreateDiscount>>();
             
-            var context = _serviceProvider.GetRequiredService<AppIdentityDbContext>();
+
+            using var scope = _serviceProvider.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
 
             //Örneğin sisteme yeni kayıt olan kullanıcıya %10 indirim senaryosu için db'ye ekleme işlemi gerçekleştirildi
             context.Discounts.Add(new Models.Discount { Rate=10, UserId = appUser.Id});
