@@ -1,6 +1,7 @@
 using BaseProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Observer.Observer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,16 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<AppIdentityDbContext>();
 
 
+//Observers kayýt yapýyoruz.
+builder.Services.AddSingleton<UserObserverSubject>(sp =>
+{
+    UserObserverSubject userObserverSubject = new();
+    userObserverSubject.RegisterObserver(new UserObserverWriteToConsole(sp));
+    userObserverSubject.RegisterObserver(new UserObserverCreateDiscount(sp));
+    userObserverSubject.RegisterObserver(new UserObserverSendEmail(sp));
+
+    return userObserverSubject;
+});
 
 var app = builder.Build();
 

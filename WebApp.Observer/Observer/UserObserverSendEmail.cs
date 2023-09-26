@@ -13,7 +13,7 @@ namespace WebApp.Observer.Observer
             _serviceProvider = serviceProvider;
         }
 
-        public void CreateUser(AppUser appUser)
+        public void UserCreated(AppUser appUser)
         {
             //ToDo: Burada kesinlikle mail bilgilerinizi girmeniz bekleniyor.
      
