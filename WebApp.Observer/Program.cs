@@ -1,6 +1,8 @@
 using BaseProject.Models;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using WebApp.Observer.Observer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +24,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 }).AddEntityFrameworkStores<AppIdentityDbContext>();
 
 
-//Observers kayýt yapýyoruz.
+//Observers kayýt yapýyoruz. MediatR kullanýldýðý için burasý sadece bir DI containera nesne ekleyecek baþka bir iþlem gerçekleþtirmeyecektir.
 builder.Services.AddSingleton<UserObserverSubject>(sp =>
 {
     UserObserverSubject userObserverSubject = new();
@@ -32,6 +34,9 @@ builder.Services.AddSingleton<UserObserverSubject>(sp =>
 
     return userObserverSubject;
 });
+
+//çalýþtýðým assembly
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

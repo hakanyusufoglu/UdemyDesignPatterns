@@ -1,6 +1,8 @@
 ﻿using BaseProject.Models;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Observer.Events;
 using WebApp.Observer.Models;
 using WebApp.Observer.Observer;
 
@@ -11,11 +13,13 @@ namespace BaseProject.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserObserverSubject _userObserverSubject;
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, UserObserverSubject userObserverSubject)
+        private readonly IMediator _mediator;
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, UserObserverSubject userObserverSubject, IMediator mediator)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userObserverSubject = userObserverSubject;
+            _mediator = mediator;
         }
 
         public IActionResult Login()
@@ -57,9 +61,13 @@ namespace BaseProject.Controllers
 
             if (identityResult.Succeeded)
             {
-                //Kullanıcının kayıt oldugunu bildiriyoruz.
-                _userObserverSubject.NotifyObservers(appUser);
+                //Kullanıcının kayıt oldugunu bildiriyoruz. MediatR kullanıldıgı için yorum satırına alındı
+                //_userObserverSubject.NotifyObservers(appUser);
 
+                //publish: birden fazla subcriber varsa publish edilir
+                //bizim eventimiz tek bir subscriber varsa send edilir.
+                
+                _mediator.Publish(new UserCreatedEvent() { AppUser=appUser });
                 ViewBag.message = "Üyelik işlemi başarıyla gerçekleştirildi";
             }
             else
