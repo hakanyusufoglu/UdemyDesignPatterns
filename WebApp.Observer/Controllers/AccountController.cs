@@ -1,6 +1,7 @@
 ﻿using BaseProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Observer.Models;
 
 namespace BaseProject.Controllers
 {
@@ -38,6 +39,30 @@ namespace BaseProject.Controllers
             //Cookie'yi siler yani çıkış yapar.
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> SignUp(UserCreateViewModel userCreateViewModel)
+        {
+            var appUser = new AppUser() { UserName=userCreateViewModel.UserName,Email=userCreateViewModel.Email };
+
+            //IdentityResult olarak kullanıcı girişi başarılı mı başarısız mı bilgisi döner
+            var identityResult = await _userManager.CreateAsync(appUser, userCreateViewModel.Password);
+
+            if (identityResult.Succeeded)
+            {
+                //observer
+                ViewBag.message = "Üyelik işlemi başarıyla gerçekleştirildi";
+            }
+            else
+            {
+                ViewBag.message = identityResult.Errors.ToList().First().Description;
+            }
+            return View();
         }
     }
 }
