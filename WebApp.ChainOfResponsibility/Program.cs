@@ -1,6 +1,7 @@
 using BaseProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.ChainOfResponsibility.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,12 @@ using (var scope = app.Services.CreateScope())
         userManager.CreateAsync(new AppUser { UserName = "user4", Email = "user4@outlook.com" }, "Password12*").Wait(); 
         userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait(); 
     }
+
+    Enumerable.Range(1, 20).ToList().ForEach(x =>
+    {
+        identityDbContext.Products.Add(new Product { Name = $"kalem {x}", Price = 100, Stock = 200 });
+    });
+    identityDbContext.SaveChanges();
 }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
