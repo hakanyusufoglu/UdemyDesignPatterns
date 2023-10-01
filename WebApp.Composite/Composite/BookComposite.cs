@@ -11,10 +11,14 @@ namespace WebApp.Composite.Composite
 
         //composite olduğu için list tutmalı
         private List<IComponent> _components;
+
+        //_component'si dış dunyaya açmış olduk. CategoryMenuController'ın index view'ında erişebileceğiz.
+        public IReadOnlyCollection<IComponent> Components => _components;
         public BookComposite(int id, string name)
         {
             Id = id;
             Name = name;
+            _components= new List<IComponent>();
         }
 
         public void Add(IComponent component)
@@ -36,7 +40,7 @@ namespace WebApp.Composite.Composite
             //her bir kategori bir div olsun
             var sb = new StringBuilder();
 
-            sb.Append($"div class='text-primary my-1'><a href='#' class='menu'> {Name} ({Count()}) </a> </div>");
+            sb.Append($"<div class='text-primary my-1'><a href='#' class='menu'> {Name} ({Count()}) </a> </div>");
 
             //bu categorynin altında alt kategori olup olmadığını count'a bakarak anlayabilirim
 
@@ -44,13 +48,13 @@ namespace WebApp.Composite.Composite
             if (!_components.Any()) return sb.ToString();
 
             //var ise
-            sb.Append("<ul class='list-group list-group-flush ml-3'>");
+            sb.Append("<ul class='list-group list-group-flush ms-3'>");
 
             foreach (var item in _components)
             {
                 sb.Append(item.Display());
             }
-            sb.Append("<ul>");
+            sb.Append("</ul>");
 
             return sb.ToString();
         }
