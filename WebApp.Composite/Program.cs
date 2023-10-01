@@ -1,6 +1,7 @@
 using BaseProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Composite.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,11 +37,38 @@ using (var scope = app.Services.CreateScope())
 
     if (!userManager.Users.Any())
     {
-        userManager.CreateAsync(new AppUser { UserName = "user1", Email = "user1@outlook.com" }, "Password12*").Wait();
-        userManager.CreateAsync(new AppUser { UserName = "user2", Email = "user2@outlook.com" }, "Password12*").Wait(); 
-        userManager.CreateAsync(new AppUser { UserName = "user3", Email = "user3@outlook.com" }, "Password12*").Wait(); 
-        userManager.CreateAsync(new AppUser { UserName = "user4", Email = "user4@outlook.com" }, "Password12*").Wait(); 
-        userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait(); 
+        //newUser'ýn Id'si eklenir.
+        var newUser = new AppUser { UserName = "user1", Email = "user1@outlook.com" };
+        userManager.CreateAsync(newUser, "Password12*").Wait();
+        userManager.CreateAsync(new AppUser { UserName = "user2", Email = "user2@outlook.com" }, "Password12*").Wait();
+        userManager.CreateAsync(new AppUser { UserName = "user3", Email = "user3@outlook.com" }, "Password12*").Wait();
+        userManager.CreateAsync(new AppUser { UserName = "user4", Email = "user4@outlook.com" }, "Password12*").Wait();
+        userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait();
+
+        //Uygulama ayaða kalkarken top (en üst) kategorileri ekliyoruz.
+        var newCategory1 = new Category { Name = "Suç romannlarý", ReferenceId = 0, UserId = newUser.Id };
+        var newCategory2 = new Category { Name = "Cinayet romannlarý", ReferenceId = 0, UserId = newUser.Id };
+        var newCategory3 = new Category { Name = "Polisiye romannlarý", ReferenceId = 0, UserId = newUser.Id };
+
+        identityDbContext.Categories.AddRange(newCategory1, newCategory2, newCategory3);
+
+        identityDbContext.SaveChanges();
+
+        //Alt kategori ekliyoruz.
+
+        var subCategory1 = new Category { Name = "Suç romanlarý 1", ReferenceId = newCategory1.Id, UserId = newUser.Id };
+        var subCategory2 = new Category { Name = "Cinayet romanlarý 1", ReferenceId = newCategory2.Id, UserId = newUser.Id };
+        var subCategory3 = new Category { Name = "Polisiye romanlarý 1", ReferenceId = newCategory3.Id, UserId = newUser.Id };
+
+        identityDbContext.Categories.AddRange(subCategory1, subCategory2, subCategory3);
+
+        identityDbContext.SaveChanges();
+
+        //Bir alt kategori daha
+        var subCategory4 = new Category { Name = "Cinayer romanlarý 1.1", ReferenceId = subCategory2.Id, UserId = newUser.Id };
+
+        identityDbContext.Categories.Add(subCategory4);
+        identityDbContext.SaveChanges();
     }
 }
 // Configure the HTTP request pipeline.
