@@ -46,9 +46,9 @@ using (var scope = app.Services.CreateScope())
         userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait();
 
         //Uygulama ayaða kalkarken top (en üst) kategorileri ekliyoruz.
-        var newCategory1 = new Category { Name = "Suç romannlarý", ReferenceId = 0, UserId = newUser.Id };
-        var newCategory2 = new Category { Name = "Cinayet romannlarý", ReferenceId = 0, UserId = newUser.Id };
-        var newCategory3 = new Category { Name = "Polisiye romannlarý", ReferenceId = 0, UserId = newUser.Id };
+        var newCategory1 = new Category { Name = "Suç romanlarý", ReferenceId = 0, UserId = newUser.Id };
+        var newCategory2 = new Category { Name = "Cinayet romanlarý", ReferenceId = 0, UserId = newUser.Id };
+        var newCategory3 = new Category { Name = "Polisiye romanlarý", ReferenceId = 0, UserId = newUser.Id };
 
         identityDbContext.Categories.AddRange(newCategory1, newCategory2, newCategory3);
 
@@ -65,7 +65,7 @@ using (var scope = app.Services.CreateScope())
         identityDbContext.SaveChanges();
 
         //Bir alt kategori daha
-        var subCategory4 = new Category { Name = "Cinayer romanlarý 1.1", ReferenceId = subCategory2.Id, UserId = newUser.Id };
+        var subCategory4 = new Category { Name = "Cinayet romanlarý 1.1", ReferenceId = subCategory2.Id, UserId = newUser.Id };
 
         identityDbContext.Categories.Add(subCategory4);
         identityDbContext.SaveChanges();

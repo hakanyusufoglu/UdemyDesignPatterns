@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Text;
 
 namespace WebApp.Composite.Composite
@@ -18,7 +19,7 @@ namespace WebApp.Composite.Composite
         {
             Id = id;
             Name = name;
-            _components= new List<IComponent>();
+            _components = new List<IComponent>();
         }
 
         public void Add(IComponent component)
@@ -34,7 +35,6 @@ namespace WebApp.Composite.Composite
             //Composite'in altında birçok kitap olabilir ve bunları topla
             return _components.Sum(x => x.Count());
         }
-
         public string Display()
         {
             //her bir kategori bir div olsun
@@ -57,6 +57,25 @@ namespace WebApp.Composite.Composite
             sb.Append("</ul>");
 
             return sb.ToString();
+        }
+
+        //Dropdownlisteki her bir item'a karşılık gelmektedir.
+        public List<SelectListItem> GetSelectListItems(string line)
+        {
+            var list = new List<SelectListItem> { new($"{line}{Name}", Id.ToString()) };
+            //is = x = bookcompoentn => true
+            if (_components.Any(x => x is BookComposite))
+            {
+                line += " - ";
+            }
+            _components.ForEach(x =>
+            {
+                if (x is BookComposite bookComposite)
+                {
+                    list.AddRange(bookComposite.GetSelectListItems(line)); //recursive
+                }
+            });
+            return list;
         }
     }
 }
