@@ -1,12 +1,29 @@
-using BaseProject.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using WebApp.Decorator.Models;
+using WebApp.Decorator.Repositories;
+using WebApp.Decorator.Repositories.Decorator;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddMemoryCache();
+//builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+//DecoratorCache'i aktifleþtiriyoruz.
+builder.Services.AddScoped<IProductRepository>(sp =>
+{
+    var context = sp.GetRequiredService<AppIdentityDbContext>();
+    var memoryCache = sp.GetRequiredService<IMemoryCache>();
+    var productRepository = new ProductRepository(context);
+
+    var cacheDecorator = new ProductRepositoryCacheDecorator(productRepository, memoryCache);
+
+    return cacheDecorator;
+});
 //MsSql için
 builder.Services.AddDbContext<AppIdentityDbContext>(options =>
 {

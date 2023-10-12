@@ -1,4 +1,4 @@
-namespace BaseProject.Models
+namespace WebApp.Decorator.Models
 {
     public class ErrorViewModel
     {
