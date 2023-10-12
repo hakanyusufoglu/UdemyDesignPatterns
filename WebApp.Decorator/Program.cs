@@ -14,20 +14,32 @@ builder.Services.AddMemoryCache();
 //builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 //DecoratorCache'i ve DecoratorLoggingi aktifleþtiriyoruz. (Compile Time) Bu yapýnýn daha kýsa gerçekleþtiren kütüphane bulunmaktadýr. (Scrutor Library)
-builder.Services.AddScoped<IProductRepository>(sp =>
-{
-    var context = sp.GetRequiredService<AppIdentityDbContext>();
-    var memoryCache = sp.GetRequiredService<IMemoryCache>();
-    var productRepository = new ProductRepository(context);
-    var logService = sp.GetRequiredService<ILogger<ProductRepositoryLoggingDecorator>>();
 
-    var cacheDecorator = new ProductRepositoryCacheDecorator(productRepository, memoryCache);
+#region Decorator patternin kütüphanesiz gerçekleþtirilmesi (1. yol)
+//builder.Services.AddScoped<IProductRepository>(sp =>
+//{
+//    var context = sp.GetRequiredService<AppIdentityDbContext>();
+//    var memoryCache = sp.GetRequiredService<IMemoryCache>();
+//    var productRepository = new ProductRepository(context);
+//    var logService = sp.GetRequiredService<ILogger<ProductRepositoryLoggingDecorator>>();
 
-    var logDecorator = new ProductRepositoryLoggingDecorator(cacheDecorator, logService);
+//    var cacheDecorator = new ProductRepositoryCacheDecorator(productRepository, memoryCache);
 
-    
-    return logDecorator;
-});
+//    var logDecorator = new ProductRepositoryLoggingDecorator(cacheDecorator, logService);
+
+
+//    return logDecorator;
+//});
+#endregion
+
+#region Scrutor Kütüphanesi ile DecoratorPattern gerçekleþtirilmesi (2. yol)
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>()
+    .Decorate<IProductRepository, ProductRepositoryCacheDecorator>()
+    .Decorate<IProductRepository, ProductRepositoryLoggingDecorator>(); ;
+
+
+#endregion
 //MsSql için
 builder.Services.AddDbContext<AppIdentityDbContext>(options =>
 {
