@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
 //builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 //DecoratorCache'i ve DecoratorLoggingi aktifleþtiriyoruz. (Compile Time) Bu yapýnýn daha kýsa gerçekleþtiren kütüphane bulunmaktadýr. (Scrutor Library)
@@ -34,11 +35,40 @@ builder.Services.AddMemoryCache();
 
 #region Scrutor Kütüphanesi ile DecoratorPattern gerçekleþtirilmesi (2. yol)
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>()
-    .Decorate<IProductRepository, ProductRepositoryCacheDecorator>()
-    .Decorate<IProductRepository, ProductRepositoryLoggingDecorator>(); ;
+//builder.Services.AddScoped<IProductRepository, ProductRepository>()
+//    .Decorate<IProductRepository, ProductRepositoryCacheDecorator>()
+//    .Decorate<IProductRepository, ProductRepositoryLoggingDecorator>(); ;
 
 
+#endregion
+
+#region Runtime esnasýnda DecoratorPatern'in gerçekleþtirilmesi (3. yol)
+builder.Services.AddScoped<IProductRepository>(sp =>
+{
+    //user1 kullanýcýsý cache özelliðine sahip olsun
+    //Diðer kullanýcýlar loglama özelliðine sahip olsun
+    var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+
+    var context = sp.GetRequiredService<AppIdentityDbContext>();
+    var memoryCache = sp.GetRequiredService<IMemoryCache>();
+    var productRepository = new ProductRepository(context);
+    var logService = sp.GetRequiredService<ILogger<ProductRepositoryLoggingDecorator>>();
+
+    //Sadece user1 kullanýcýsý cache özelliðine sahip olacak.
+    //Dbde kullanýcý da cache özelliði olsun mu olmasýn mý gibi verisini tutar ona göre iþlemleri gerçekleþtirebiliriz.
+    if (httpContextAccessor.HttpContext.User.Identity.Name == "user1")
+    {
+        var cacheDecorator = new ProductRepositoryCacheDecorator(productRepository, memoryCache);
+        return cacheDecorator;
+    }
+
+
+    //Diðer kullanýcýlar cache özelliðine sahip olmayacak ancak log özelliðine sahip olacak.
+    var logDecorator = new ProductRepositoryLoggingDecorator(productRepository, logService);
+
+
+    return logDecorator;
+});
 #endregion
 //MsSql için
 builder.Services.AddDbContext<AppIdentityDbContext>(options =>
@@ -70,10 +100,10 @@ using (var scope = app.Services.CreateScope())
     if (!userManager.Users.Any())
     {
         userManager.CreateAsync(new AppUser { UserName = "user1", Email = "user1@outlook.com" }, "Password12*").Wait();
-        userManager.CreateAsync(new AppUser { UserName = "user2", Email = "user2@outlook.com" }, "Password12*").Wait(); 
-        userManager.CreateAsync(new AppUser { UserName = "user3", Email = "user3@outlook.com" }, "Password12*").Wait(); 
-        userManager.CreateAsync(new AppUser { UserName = "user4", Email = "user4@outlook.com" }, "Password12*").Wait(); 
-        userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait(); 
+        userManager.CreateAsync(new AppUser { UserName = "user2", Email = "user2@outlook.com" }, "Password12*").Wait();
+        userManager.CreateAsync(new AppUser { UserName = "user3", Email = "user3@outlook.com" }, "Password12*").Wait();
+        userManager.CreateAsync(new AppUser { UserName = "user4", Email = "user4@outlook.com" }, "Password12*").Wait();
+        userManager.CreateAsync(new AppUser { UserName = "user5", Email = "user5@outlook.com" }, "Password12*").Wait();
     }
 }
 // Configure the HTTP request pipeline.
