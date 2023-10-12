@@ -13,16 +13,20 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 //builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
-//DecoratorCache'i aktifleþtiriyoruz.
+//DecoratorCache'i ve DecoratorLoggingi aktifleþtiriyoruz. (Compile Time) Bu yapýnýn daha kýsa gerçekleþtiren kütüphane bulunmaktadýr. (Scrutor Library)
 builder.Services.AddScoped<IProductRepository>(sp =>
 {
     var context = sp.GetRequiredService<AppIdentityDbContext>();
     var memoryCache = sp.GetRequiredService<IMemoryCache>();
     var productRepository = new ProductRepository(context);
+    var logService = sp.GetRequiredService<ILogger<ProductRepositoryLoggingDecorator>>();
 
     var cacheDecorator = new ProductRepositoryCacheDecorator(productRepository, memoryCache);
 
-    return cacheDecorator;
+    var logDecorator = new ProductRepositoryLoggingDecorator(cacheDecorator, logService);
+
+    
+    return logDecorator;
 });
 //MsSql için
 builder.Services.AddDbContext<AppIdentityDbContext>(options =>
