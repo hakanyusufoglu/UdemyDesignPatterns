@@ -1,11 +1,14 @@
 using WebApp.Adapter.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using WebApp.Adapter.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IImageProcess, ImageProcess>();
 
 //MsSql için
 builder.Services.AddDbContext<AppIdentityDbContext>(options =>
